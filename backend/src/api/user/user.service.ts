@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateUserDto } from './create-user-dto';
 
+// Service functions to help interact with the database
 @Injectable()
 export class UserService {
 

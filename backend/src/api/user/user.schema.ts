@@ -1,8 +1,10 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument } from "mongoose";
 
+// Alias
 export type UserDocument = HydratedDocument<User>
 
+// The schema for MongoDB to use
 @Schema({ timestamps: true })
 export class User {
     @Prop({ required: true, })
@@ -17,8 +19,10 @@ export class User {
     role: ROLES
 }
 
+// Create the schema
 export const UserSchema = SchemaFactory.createForClass(User)
 
+// A map of user roles
 export enum ROLES {
     User = "User",
     Analyst = "Analyst",
