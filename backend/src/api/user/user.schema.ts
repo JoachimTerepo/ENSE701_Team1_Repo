@@ -20,8 +20,8 @@ export class User {
 export const UserSchema = SchemaFactory.createForClass(User)
 
 export enum ROLES {
-    User,
-    Analyst,
-    Moderator,
-    Admin
+    User = "User",
+    Analyst = "Analyst",
+    Moderator = "Moderator",
+    Admin = "Admin"
 }
