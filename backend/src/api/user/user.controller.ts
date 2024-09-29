@@ -11,13 +11,13 @@ export class UserController {
     constructor(private readonly userService: UserService) { }
 
     @Get()
-    findAll(): string {
-        return 'This action returns all cats';
+    async findAll() {
+        return await this.userService.findAll()
     }
 
     // To create a user. Expects an object fitting the definition of the CreateUserDto object
     @Post('/create')
-    async createUser(@Body() createUserDto: CreateUserDto) {
+    async create(@Body() createUserDto: CreateUserDto) {
         try {
             // Try to create the user
             await this.userService.create(createUserDto)
