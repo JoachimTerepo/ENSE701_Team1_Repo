@@ -22,12 +22,12 @@ export class ArticleService {
         return await this.UserModel.findById(id).exec();
     }
 
-    async create(createUserDto: CreateArticleDTO) {
-        return await this.UserModel.create(createUserDto);
+    async create(createArticleDto: CreateArticleDTO) {
+        return await this.UserModel.create(createArticleDto);
     }
 
-    async update(id: string, createUserDto: CreateArticleDTO) {
-        return await this.UserModel.findByIdAndUpdate(id, createUserDto).exec();
+    async update(id: string, createArticleDto: CreateArticleDTO) {
+        return await this.UserModel.findByIdAndUpdate(id, createArticleDto).exec();
     }
 
     async delete(id: string) {
