@@ -5,7 +5,6 @@ import { ROLES } from "./user.schema";
  * Object used by MongoDB to create a user
  */
 export class CreateUserDto {
-    id: string;
     created_at: Date;
     updated_at: Date;
     email: string;
