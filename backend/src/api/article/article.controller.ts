@@ -18,14 +18,15 @@ export class ArticleController {
     // To create an article. Expects an object fitting the definition of the CreateArticleDto object
     @Post('/create')
     async create(@Body() createArticleDto: CreateArticleDTO) {
+        console.log(createArticleDto.content)
         try {
             // Try to create the user
             await this.articleService.create(createArticleDto)
-            return "successful"
+            return {error: null}
         } catch (e) {
             // Send the error back to the user
             // TODO: Improve this error message by making it an object
-            return "Something went wrong\n" + e
+            return {error: "Something went wrong\n" + e}
         }
     }
 }

@@ -7,22 +7,42 @@ import "../styles/SubmissionForm.css";
 type FormData = {
   title: string;
   authors: string;
-  journal_name: string;
-  year_of_publication: number;
-  volume_number_pages: string;
-  doi: string;
+  journal: string;
+  year: number;
+  sections: string;
+  url: string;
+  content: string
 };
 
 export default function SubmissionForm() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
 
-  const onSubmit: SubmitHandler<FormData> = (data) => {
-    console.log("Form Submitted Data:", data);
-    window.alert("Submission successful!");
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
+    console.log("Form Submitted Data:", JSON.stringify(data));
+    data.content = "content"
+    try {
+      const response = await fetch("http://localhost:3001/api/article/create", { 
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      const responseData = await response.json();
+      if (responseData.error !== null) {
+        throw new Error(responseData.error)
+      }
+      console.log("Server Response:", responseData);
+      window.alert("Submission successful!");
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      setErrorMessage("There was an error submitting the form.");
+    }
   };
 
-  // pdf handle 
+  // Handle file upload
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && file.type === "application/pdf") {
@@ -50,44 +70,44 @@ export default function SubmissionForm() {
 
         <div className="formItem">
           <label>Journal Name</label>
-          <input {...register("journal_name", { required: "Journal name is required" })} placeholder="Journal Name" />
-          {errors.journal_name && <span className="error">{errors.journal_name.message}</span>}
+          <input {...register("journal", { required: "Journal name is required" })} placeholder="Journal Name" />
+          {errors.journal && <span className="error">{errors.journal.message}</span>}
         </div>
 
         <div className="formItem">
           <label>Year of Publication</label>
           <input
             type="number"
-            {...register("year_of_publication", {
+            {...register("year", {
               required: "Year of publication is required",
               min: { value: 1800, message: "Year must be after 1900" },
               max: { value: new Date().getFullYear(), message: `Year must be ${new Date().getFullYear()} or earlier` }
             })}
             placeholder="Year of Publication"
           />
-          {errors.year_of_publication && (
-            <span className="error">{errors.year_of_publication.message}</span>
+          {errors.year && (
+            <span className="error">{errors.year.message}</span>
           )}
         </div>
 
         <div className="formItem">
           <label>Volume, Number, Pages</label>
           <input
-            {...register("volume_number_pages", { required: "Volume, number, and pages are required" })}
+            {...register("sections", { required: "Volume, number, and pages are required" })}
             placeholder="Volume, Number, Pages"
           />
-          {errors.volume_number_pages && <span className="error">{errors.volume_number_pages.message}</span>}
+          {errors.sections && <span className="error">{errors.sections.message}</span>}
         </div>
 
         <div className="formItem">
           <label>DOI</label>
           <input
-            {...register("doi", {
+            {...register("url", {
               required: "DOI is required"
             })}
             placeholder="DOI"
           />
-          {errors.doi && <span className="error">{errors.doi.message}</span>}
+          {errors.url && <span className="error">{errors.url.message}</span>}
         </div>
 
         <div className="formItem">
