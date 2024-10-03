@@ -1,11 +1,10 @@
-'use client';
+'use client'; // Required for stateful components in the new Next.js app directory
 
 import React, { useState } from 'react';
 import SearchBar from '../../components/SearchBar';
 import YearRangeFilter from '../../components/YearRangeFilter';
 import ResultsDisplay from '../../components/ResultsDisplay';
 
-// 1. Add the `Result` type here
 interface Result {
   title: string;
   authors: string[];
@@ -13,47 +12,63 @@ interface Result {
   year: number;
   url: string;
   bibtex: string;
-  rating?: number; // Optional field
+  method: string; // Add a `method` field to represent the SE method used
 }
 
 const SearchPage: React.FC = () => {
-  // 2. Explicitly type the `results` state as `Result[]`
-  const [results, setResults] = useState<Result[]>([]); // <-- Change here
+  // State for the search results and year range
+  const [results, setResults] = useState<Result[]>([]);
   const [yearRange, setYearRange] = useState({ startYear: 2000, endYear: 2024 });
+  const [selectedMethod, setSelectedMethod] = useState("Agile"); // Default SE method
 
-  const handleSearch = (query: string) => {
-    const filteredResults = mockSearch(query, yearRange.startYear, yearRange.endYear);
-    setResults(filteredResults); // Set the results without errors
+  // Function to handle SE method selection
+  const handleMethodSelect = (method: string) => {
+    setSelectedMethod(method);
+    handleSearch(method, yearRange.startYear, yearRange.endYear);
   };
 
+  // Function to handle year range changes
   const handleYearRangeChange = (startYear: number, endYear: number) => {
     setYearRange({ startYear, endYear });
+    handleSearch(selectedMethod, startYear, endYear); // Reapply filter based on new year range
   };
 
-  // Mock search function with proper `Result[]` typing
-  const mockSearch = (query: string, startYear: number, endYear: number): Result[] => {
+  // Mock search function for demonstration purposes
+  const handleSearch = (method: string, startYear: number, endYear: number): void => {
+    // Mock data representing articles in the database
     const mockResults: Result[] = [
       {
-        title: 'Understanding Next.js',
+        title: 'Understanding Agile Development',
         authors: ['John Doe'],
         journal: 'Web Technologies',
         year: 2022,
         url: 'https://example.com/article1',
-        bibtex: generateBibTex('Understanding Next.js', ['John Doe'], 2022, 'Web Technologies'),
+        bibtex: generateBibTex('Understanding Agile Development', ['John Doe'], 2022, 'Web Technologies'),
+        method: 'Agile',
       },
       {
-        title: 'React Patterns',
+        title: 'Test-Driven Development Best Practices',
         authors: ['Jane Smith', 'Robert Brown'],
-        journal: 'Frontend Development',
+        journal: 'Software Engineering',
         year: 2020,
         url: 'https://example.com/article2',
-        bibtex: generateBibTex('React Patterns', ['Jane Smith', 'Robert Brown'], 2020, 'Frontend Development'),
+        bibtex: generateBibTex('Test-Driven Development Best Practices', ['Jane Smith', 'Robert Brown'], 2020, 'Software Engineering'),
+        method: 'Test-Driven Development',
       },
     ];
-    return mockResults.filter((result) => result.year >= startYear && result.year <= endYear);
+
+    // Filter based on the selected SE method and the year range
+    const filteredResults = mockResults.filter(
+      (result) =>
+        result.method === method &&
+        result.year >= startYear &&
+        result.year <= endYear
+    );
+
+    setResults(filteredResults);
   };
 
-  // Function to generate BibTex format
+  // Function to generate BibTex format for demonstration purposes
   const generateBibTex = (title: string, authors: string[], year: number, journal: string): string => {
     const authorString = authors.join(' and ');
     return `@article{${authors[0].toLowerCase()}${year}${title.replace(/\s+/g, '')},
@@ -67,8 +82,11 @@ const SearchPage: React.FC = () => {
   return (
     <div>
       <h1>Search Journals</h1>
-      <SearchBar onSearch={handleSearch} />
+      {/* Use the dropdown-based SearchBar */}
+      <SearchBar onMethodSelect={handleMethodSelect} />
+      {/* Year range selection component */}
       <YearRangeFilter minYear={2000} maxYear={2024} onYearRangeChange={handleYearRangeChange} />
+      {/* Display the search results */}
       <ResultsDisplay results={results} />
     </div>
   );
