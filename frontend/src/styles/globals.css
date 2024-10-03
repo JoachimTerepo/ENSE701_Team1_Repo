@@ -1,0 +1,137 @@
+/* src/styles/globals.css */
+
+/* Reset Styles */
+body, h1, h2, h3, p, ul, li, a, input, button {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  /* Basic Global Styles */
+  body {
+    background-color: #f4f4f4;
+    color: #333;
+    line-height: 1.6;
+    display: flex;
+    justify-content: center;
+  }
+  
+  /* Container Styles */
+  .container {
+    width: 80%;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+  }
+  
+  /* Header Styling */
+  h1, h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  /* Styling the Search Bar Container */
+  .searchBar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+  }
+  
+  .inputField {
+    width: 300px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
+  }
+  
+  /* Styling the Year Range Filter */
+  .filterContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+  }
+  
+  .filterContainer label {
+    margin-right: 10px;
+  }
+  
+  .filterContainer input {
+    width: 80px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 10px;
+  }
+  
+  .applyButton {
+    padding: 8px 16px;
+    border: none;
+    background-color: #0070f3;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .applyButton:hover {
+    background-color: #005bb5;
+  }
+  
+  /* Styling the Button */
+  .button {
+    background-color: #0070f3;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .button:hover {
+    background-color: #005bb5;
+  }
+  
+  /* Result Card Styling */
+  .resultCard {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .resultCard:hover {
+    box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.15);
+  }
+  
+  .resultCardTitle {
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+  
+  .resultCardAuthors {
+    color: #555;
+    margin-bottom: 5px;
+  }
+  
+  .resultCardJournal {
+    color: #777;
+    margin-bottom: 10px;
+  }
+  
+  .bibtex {
+    background-color: #f5f5f5;
+    padding: 15px;
+    border-radius: 4px;
+    overflow-x: scroll;
+  }
+  
+  /* Center Align Text */
+  .text-center {
+    text-align: center;
+  }
+  
