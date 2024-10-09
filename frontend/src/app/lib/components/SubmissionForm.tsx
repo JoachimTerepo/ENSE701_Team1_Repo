@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import "../styles/SubmissionForm.css"; 
+import "@/app/styles/SubmissionForm.css";
 
 type FormData = {
   title: string;
@@ -11,18 +11,22 @@ type FormData = {
   year: number;
   sections: string;
   url: string;
-  content: string
+  content: string;
 };
 
 export default function SubmissionForm() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>();
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     console.log("Form Submitted Data:", JSON.stringify(data));
-    data.content = "content"
+    data.content = "content";
     try {
-      const response = await fetch("http://localhost:3001/api/article/create", { 
+      const response = await fetch("http://localhost:3001/api/article/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -32,7 +36,7 @@ export default function SubmissionForm() {
 
       const responseData = await response.json();
       if (responseData.error !== null) {
-        throw new Error(responseData.error)
+        throw new Error(responseData.error);
       }
       console.log("Server Response:", responseData);
       window.alert("Submission successful!");
@@ -46,7 +50,9 @@ export default function SubmissionForm() {
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && file.type === "application/pdf") {
-      setErrorMessage("PDF files are not allowed. Please upload a BibTeX (.bib) file.");
+      setErrorMessage(
+        "PDF files are not allowed. Please upload a BibTeX (.bib) file."
+      );
       e.target.value = ""; // Reset the file input
     } else {
       setErrorMessage(null);
@@ -58,20 +64,35 @@ export default function SubmissionForm() {
       <form onSubmit={handleSubmit(onSubmit)} className="form">
         <div className="formItem">
           <label>Title</label>
-          <input {...register("title", { required: "Title is required" })} placeholder="Title" />
-          {errors.title && <span className="error">{errors.title.message}</span>}
+          <input
+            {...register("title", { required: "Title is required" })}
+            placeholder="Title"
+          />
+          {errors.title && (
+            <span className="error">{errors.title.message}</span>
+          )}
         </div>
 
         <div className="formItem">
           <label>Authors</label>
-          <input {...register("authors", { required: "Authors are required" })} placeholder="Authors" />
-          {errors.authors && <span className="error">{errors.authors.message}</span>}
+          <input
+            {...register("authors", { required: "Authors are required" })}
+            placeholder="Authors"
+          />
+          {errors.authors && (
+            <span className="error">{errors.authors.message}</span>
+          )}
         </div>
 
         <div className="formItem">
           <label>Journal Name</label>
-          <input {...register("journal", { required: "Journal name is required" })} placeholder="Journal Name" />
-          {errors.journal && <span className="error">{errors.journal.message}</span>}
+          <input
+            {...register("journal", { required: "Journal name is required" })}
+            placeholder="Journal Name"
+          />
+          {errors.journal && (
+            <span className="error">{errors.journal.message}</span>
+          )}
         </div>
 
         <div className="formItem">
@@ -81,29 +102,34 @@ export default function SubmissionForm() {
             {...register("year", {
               required: "Year of publication is required",
               min: { value: 1800, message: "Year must be after 1900" },
-              max: { value: new Date().getFullYear(), message: `Year must be ${new Date().getFullYear()} or earlier` }
+              max: {
+                value: new Date().getFullYear(),
+                message: `Year must be ${new Date().getFullYear()} or earlier`,
+              },
             })}
             placeholder="Year of Publication"
           />
-          {errors.year && (
-            <span className="error">{errors.year.message}</span>
-          )}
+          {errors.year && <span className="error">{errors.year.message}</span>}
         </div>
 
         <div className="formItem">
           <label>Volume, Number, Pages</label>
           <input
-            {...register("sections", { required: "Volume, number, and pages are required" })}
+            {...register("sections", {
+              required: "Volume, number, and pages are required",
+            })}
             placeholder="Volume, Number, Pages"
           />
-          {errors.sections && <span className="error">{errors.sections.message}</span>}
+          {errors.sections && (
+            <span className="error">{errors.sections.message}</span>
+          )}
         </div>
 
         <div className="formItem">
           <label>DOI</label>
           <input
             {...register("url", {
-              required: "DOI is required"
+              required: "DOI is required",
             })}
             placeholder="DOI"
           />
@@ -116,7 +142,9 @@ export default function SubmissionForm() {
           {errorMessage && <span className="error">{errorMessage}</span>}
         </div>
 
-        <button type="submit" className="buttonItem">Submit</button>
+        <button type="submit" className="buttonItem">
+          Submit
+        </button>
       </form>
     </div>
   );
