@@ -1,6 +1,6 @@
 
-import { Body, Controller, Get, Post } from '@nestjs/common';
-import { CreateArticleDTO } from './create-article-dto';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { ArticleDTO, ArticleFilter } from './dto';
 import { ArticleService } from './article.service';
 
 /**
@@ -11,22 +11,26 @@ export class ArticleController {
     constructor(private readonly articleService: ArticleService) { }
 
     @Get()
-    findAll(): string {
-        return 'This action returns all cats';
+    async findAll(@Body() filter: ArticleFilter) {
+        try {
+            const data = await this.articleService.findAll(filter)
+            return data
+        } catch (e) {
+            return { error: "Something went wrong\n" + e }
+        }
     }
 
     // To create an article. Expects an object fitting the definition of the CreateArticleDto object
     @Post('/create')
-    async create(@Body() createArticleDto: CreateArticleDTO) {
-        console.log(createArticleDto.content)
+    async create(@Body() createArticleDto: ArticleDTO) {
         try {
             // Try to create the user
             await this.articleService.create(createArticleDto)
-            return {error: null}
+            return { error: null }
         } catch (e) {
             // Send the error back to the user
             // TODO: Improve this error message by making it an object
-            return {error: "Something went wrong\n" + e}
+            return { error: "Something went wrong\n" + e }
         }
     }
 }

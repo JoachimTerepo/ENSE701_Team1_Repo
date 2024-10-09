@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Article } from './article.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreateArticleDTO } from './create-article-dto';
+import { ArticleDTO, ArticleFilter } from './dto';
 
 // Service functions to help interact with the database
 @Injectable()
@@ -14,19 +14,19 @@ export class ArticleService {
         return 'User route testing';
     }
 
-    async findAll(): Promise<Article[]> {
-        return await this.UserModel.find().exec();
+    async findAll(filter: ArticleFilter): Promise<Article[]> {
+        return await this.UserModel.find(filter).exec();
     }
 
     async findOne(id: string): Promise<Article> {
         return await this.UserModel.findById(id).exec();
     }
 
-    async create(createArticleDto: CreateArticleDTO) {
+    async create(createArticleDto: ArticleDTO) {
         return await this.UserModel.create(createArticleDto);
     }
 
-    async update(id: string, createArticleDto: CreateArticleDTO) {
+    async update(id: string, createArticleDto: ArticleDTO) {
         return await this.UserModel.findByIdAndUpdate(id, createArticleDto).exec();
     }
 
