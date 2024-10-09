@@ -1,6 +1,6 @@
 import { User } from "../user/user.schema"
 
-export class CreateArticleDTO {
+export class ArticleDTO {
     id: string
     title: string
     authors: string[]
@@ -19,4 +19,9 @@ export class CreateArticleDTO {
     quality_checked_at?: Date
     quality_checked_by?: User
     moderation_comments?: string
+}
+
+export class ArticleFilter {
+    is_approved?: boolean
+    quality_check_pass?: boolean
 }
