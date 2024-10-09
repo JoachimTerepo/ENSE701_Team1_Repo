@@ -1,4 +1,4 @@
-import NavLink from "../lib/components/NavLink";
+import NavLink from "@/app/lib/components/NavLink";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
