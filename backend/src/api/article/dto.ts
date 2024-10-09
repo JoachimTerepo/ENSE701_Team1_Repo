@@ -22,6 +22,13 @@ export class ArticleDTO {
 }
 
 export class ArticleFilter {
+    id?: string
+    year?: number
+    isbn?: string
     is_approved?: boolean
+    approved_at?: Date
+    total_ratings?: number
+    rating?: number
     quality_check_pass?: boolean
+    quality_checked_at?: Date
 }
