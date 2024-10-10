@@ -1,7 +1,7 @@
 
 
 export type Article = {
-    id: string,
+    _id: string,
     title: string,
     authors: string[]
     journal: string
