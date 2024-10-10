@@ -33,4 +33,17 @@ export class ArticleController {
             return { error: "Something went wrong\n" + e }
         }
     }
+
+    @Post("/update")
+    async update(@Body() articleDTO: ArticleDTO) {
+        try {
+            // Try to create the user
+            await this.articleService.update(articleDTO.id, articleDTO)
+            return { error: null }
+        } catch (e) {
+            // Send the error back to the user
+            // TODO: Improve this error message by making it an object
+            return { error: "Something went wrong\n" + e }
+        }
+    }
 }
