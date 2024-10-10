@@ -10,7 +10,7 @@ import { ArticleService } from './article.service';
 export class ArticleController {
     constructor(private readonly articleService: ArticleService) { }
 
-    @Get()
+    @Post()
     async findAll(@Body() filter: ArticleFilter) {
         try {
             const data = await this.articleService.findAll(filter)
