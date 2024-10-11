@@ -36,6 +36,7 @@ export default function Home() {
             <th>Author(s)</th>
             <th>Year</th>
             <th>URL</th>
+            <th>Rating</th>
           </tr>
         </thead>
         <tbody>
@@ -52,6 +53,9 @@ export default function Home() {
                   <a href={"http://" + a.url} target="_blank">
                     {a.url}
                   </a>
+                </td>
+                <td>
+                  {a.rating}⭐ ({a.total_ratings} rating/s)
                 </td>
               </tr>
             );
