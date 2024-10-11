@@ -79,6 +79,7 @@ const ArticleTable = ({
           <th>Author(s)</th>
           <th>Year</th>
           <th>URL</th>
+          <th>Accept/Decline</th>
         </tr>
       </thead>
       <tbody>
