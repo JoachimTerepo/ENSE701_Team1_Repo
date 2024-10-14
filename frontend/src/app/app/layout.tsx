@@ -9,8 +9,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </div>
         <div className="w-1/2 flex justify-end items-center px-2">
           <NavLink href="/app">Home</NavLink>
+          <NavLink href="/app/claims">Claims</NavLink>
           <NavLink href="/app/moderate">Moderate</NavLink>
           <NavLink href="/app/submission">Submit New Entry</NavLink>
+          <NavLink href="/app/analysis">Analysis</NavLink>
         </div>
       </div>
       <div className="w-100 h-dvh">{children}</div>
