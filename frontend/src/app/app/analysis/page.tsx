@@ -2,7 +2,7 @@
 
 import Blocker from "@/app/lib/components/Blocker";
 import { Article } from "@/app/lib/types/article";
-import { ReactNode, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Analysis() {
   const [data, setData] = useState<Article[] | null>(null);
