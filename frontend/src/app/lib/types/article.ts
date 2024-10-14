@@ -1,5 +1,3 @@
-
-
 export type Article = {
     _id: string,
     title: string,
@@ -13,6 +11,7 @@ export type Article = {
     is_approved?: boolean
     approved_at?: Date
     approved_by?: string
+  rating_sum: number
     total_ratings?: number
     rating?: number
     quality_check_pass?: boolean
@@ -22,3 +21,4 @@ export type Article = {
     moderation_comments?: string
     claims?: string[]
 }
+

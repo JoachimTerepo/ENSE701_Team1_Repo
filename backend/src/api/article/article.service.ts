@@ -2,17 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { Article } from './article.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import { ArticleDTO, ArticleFilter } from './dto';
+import { ArticleDTO, ArticleFilter, ArticleUpdateDTO } from './dto';
 
 // Service functions to help interact with the database
 @Injectable()
 export class ArticleService {
 
-    constructor(@InjectModel(Article.name) private ArticleModel: Model<Article>) { }
+   constructor(@InjectModel(Article.name) private ArticleModel: Model<Article>) { }
 
-    test(): string {
-        return 'User route testing';
-    }
+  async findAll(filter: ArticleFilter): Promise<Article[]> {
+    return await this.UserModel.find(filter).exec();
+  }
 
     async findAll(filter: ArticleFilter): Promise<Article[]> {
         return await this.ArticleModel.find(filter).exec();
@@ -28,9 +28,7 @@ export class ArticleService {
 
     async update(id: string, articleDto: ArticleDTO) {
         if (articleDto.claims !== undefined) {
-            console.log(articleDto.claims)
             let data = { ...articleDto, claims: articleDto.claims.map(c => new Types.ObjectId(c)) }
-            console.log(id)
             return await this.ArticleModel.findByIdAndUpdate(id, { $set: { claims: data.claims } }).exec();
         }
         return await this.ArticleModel.findByIdAndUpdate(id, articleDto).exec();

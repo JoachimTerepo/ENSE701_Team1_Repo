@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose, { HydratedDocument, Types } from "mongoose";
 import { User } from "../user/user.schema";
 
-export type ArticleDocument = HydratedDocument<Article>
+export type ArticleDocument = HydratedDocument<Article>;
 
 @Schema({ timestamps: true })
 export class Article {
@@ -39,6 +39,9 @@ export class Article {
     // The user who approved the article
     @Prop({ type: { type: mongoose.Schema.Types.ObjectId, ref: "User" } })
     approved_by: User
+      // Rating sum
+  @Prop({ default: 0, required: true })
+  rating_sum: number;
     // Number of ratings
     @Prop()
     total_ratings: number
@@ -67,5 +70,4 @@ export class Article {
     claims: Types.ObjectId[]
 }
 
-export const ArticleSchema = SchemaFactory.createForClass(Article)
-
+export const ArticleSchema = SchemaFactory.createForClass(Article);
