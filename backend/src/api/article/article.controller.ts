@@ -42,7 +42,6 @@ export class ArticleController {
             return { error: null }
         } catch (e) {
             // Send the error back to the user
-            // TODO: Improve this error message by making it an object
             return { error: "Something went wrong\n" + e }
         }
     }

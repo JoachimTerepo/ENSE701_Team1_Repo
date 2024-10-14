@@ -18,5 +18,6 @@ export type Article = {
     quality_check_pass?: boolean
     quality_checked_at?: Date
     quality_checked_by?: string
+    analysed_at?: Date
     moderation_comments?: string
 }
