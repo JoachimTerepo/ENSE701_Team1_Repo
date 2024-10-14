@@ -7,7 +7,7 @@ import { ArticleService } from './article.service';
  */
 @Controller('/api/article')
 export class ArticleController {
-  constructor(private readonly articleService: ArticleService) {}
+  constructor(private readonly articleService: ArticleService) { }
 
   @Post()
   async findAll(@Body() filter: ArticleFilter) {
@@ -32,18 +32,18 @@ export class ArticleController {
       return { error: 'Something went wrong\n' + e };
     }
   }
-  
-    @Post("/update")
-    async update(@Body() articleDTO: ArticleDTO) {
-        try {
-            // Try to create the user
-            await this.articleService.update(articleDTO.id, articleDTO)
-            return { error: null }
-        } catch (e) {
-            // Send the error back to the user
-            return { error: "Something went wrong\n" + e }
-        }
 
+  @Post("/update")
+  async update(@Body() articleDTO: ArticleDTO) {
+    try {
+      // Try to create the user
+      await this.articleService.update(articleDTO.id, articleDTO)
+      return { error: null }
+    } catch (e) {
+      // Send the error back to the user
+      return { error: "Something went wrong\n" + e }
     }
+
   }
 }
+

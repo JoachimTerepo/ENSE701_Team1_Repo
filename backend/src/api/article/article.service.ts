@@ -8,11 +8,7 @@ import { ArticleDTO, ArticleFilter, ArticleUpdateDTO } from './dto';
 @Injectable()
 export class ArticleService {
 
-   constructor(@InjectModel(Article.name) private ArticleModel: Model<Article>) { }
-
-  async findAll(filter: ArticleFilter): Promise<Article[]> {
-    return await this.UserModel.find(filter).exec();
-  }
+    constructor(@InjectModel(Article.name) private ArticleModel: Model<Article>) { }
 
     async findAll(filter: ArticleFilter): Promise<Article[]> {
         return await this.ArticleModel.find(filter).exec();
