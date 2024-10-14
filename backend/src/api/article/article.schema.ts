@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import mongoose, { HydratedDocument } from "mongoose";
+import mongoose, { HydratedDocument, Types } from "mongoose";
 import { User } from "../user/user.schema";
 
 export type ArticleDocument = HydratedDocument<Article>
@@ -63,6 +63,8 @@ export class Article {
     // Any comments that moderators have regarding the analysis and approval process
     @Prop()
     moderation_comments: string
+    @Prop({ type: Types.Array<Types.ObjectId>, ref: "Claims", default: [] })
+    claims: Types.ObjectId[]
 }
 
 export const ArticleSchema = SchemaFactory.createForClass(Article)

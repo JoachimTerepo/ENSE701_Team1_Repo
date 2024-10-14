@@ -1,12 +1,13 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument, Types } from "mongoose";
+import { title } from "process";
 
 
 export type ClaimDocument = HydratedDocument<Claim>
 
 @Schema({ timestamps: true })
 export class Claim {
-    @Prop({ required: true })
+    @Prop({ required: true, index: true })
     name: string
     @Prop()
     colour: string
@@ -16,5 +17,8 @@ export class Claim {
     is_parent: boolean
 }
 
-export const ClaimSchema = SchemaFactory.createForClass(Claim)
+const schema = SchemaFactory.createForClass(Claim)
+schema.index({ name: 'text' })
+
+export const ClaimSchema = schema
 

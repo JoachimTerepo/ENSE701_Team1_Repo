@@ -37,6 +37,7 @@ export class ArticleController {
     @Post("/update")
     async update(@Body() articleDTO: ArticleDTO) {
         try {
+            console.log(articleDTO)
             // Try to create the user
             await this.articleService.update(articleDTO.id, articleDTO)
             return { error: null }

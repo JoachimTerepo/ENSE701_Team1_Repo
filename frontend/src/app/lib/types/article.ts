@@ -20,4 +20,5 @@ export type Article = {
     quality_checked_by?: string
     analysed_at?: Date
     moderation_comments?: string
+    claims?: string[]
 }

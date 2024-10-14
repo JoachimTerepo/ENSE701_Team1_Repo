@@ -43,4 +43,13 @@ export class ClaimService {
         const deletedClaim = await this.ClaimModel.findByIdAndDelete(id).exec();
         return deletedClaim;
     }
+
+    async search(text: string) {
+        return await this.ClaimModel.find({
+            $or: [
+                { name: { $regex: text, $options: 'i' } },
+            ],
+            is_parent: false
+        }).limit(10).exec()
+    }
 }

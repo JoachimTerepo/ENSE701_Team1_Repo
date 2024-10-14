@@ -19,6 +19,7 @@ export class ArticleDTO {
     quality_checked_at?: Date
     quality_checked_by?: User
     moderation_comments?: string
+    claims: string[]
 }
 
 export class ArticleFilter {

@@ -55,4 +55,14 @@ export class ClaimController {
             return { error: "Something went wrong\n" + e }
         }
     }
+
+    @Get("/search/:text")
+    async search(@Param('text') text: string) {
+        try {
+            const data = await this.ClaimService.search(text)
+            return data
+        } catch (e) {
+            return { error: "Something went wrong\n" + e }
+        }
+    }
 }
