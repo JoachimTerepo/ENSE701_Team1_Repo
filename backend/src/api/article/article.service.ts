@@ -1,37 +1,37 @@
 import { Injectable } from '@nestjs/common';
 import { Article } from './article.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { CreateArticleDTO } from './create-article-dto';
+import { Model, Types } from 'mongoose';
+import { ArticleDTO, ArticleFilter, ArticleUpdateDTO } from './dto';
 
 // Service functions to help interact with the database
 @Injectable()
 export class ArticleService {
 
-    constructor(@InjectModel(Article.name) private UserModel: Model<Article>) { }
+    constructor(@InjectModel(Article.name) private ArticleModel: Model<Article>) { }
 
-    test(): string {
-        return 'User route testing';
-    }
-
-    async findAll(): Promise<Article[]> {
-        return await this.UserModel.find().exec();
+    async findAll(filter: ArticleFilter): Promise<Article[]> {
+        return await this.ArticleModel.find(filter).exec();
     }
 
     async findOne(id: string): Promise<Article> {
-        return await this.UserModel.findById(id).exec();
+        return await this.ArticleModel.findById(id).exec();
     }
 
-    async create(createArticleDto: CreateArticleDTO) {
-        return await this.UserModel.create(createArticleDto);
+    async create(createArticleDto: ArticleDTO) {
+        return await this.ArticleModel.create(createArticleDto);
     }
 
-    async update(id: string, createArticleDto: CreateArticleDTO) {
-        return await this.UserModel.findByIdAndUpdate(id, createArticleDto).exec();
+    async update(id: string, articleDto: ArticleDTO) {
+        if (articleDto.claims !== undefined) {
+            let data = { ...articleDto, claims: articleDto.claims.map(c => new Types.ObjectId(c)) }
+            return await this.ArticleModel.findByIdAndUpdate(id, { $set: { claims: data.claims } }).exec();
+        }
+        return await this.ArticleModel.findByIdAndUpdate(id, articleDto).exec();
     }
 
     async delete(id: string) {
-        const deletedUser = await this.UserModel.findByIdAndDelete(id).exec();
+        const deletedUser = await this.ArticleModel.findByIdAndDelete(id).exec();
         return deletedUser;
     }
 }
