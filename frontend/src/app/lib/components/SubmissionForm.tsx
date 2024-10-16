@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
+import bibtexParse from "bibtex-parse-js"; // Import BibTeX parser
 import "@/app/styles/SubmissionForm.css";
 
 type FormData = {
@@ -16,15 +17,11 @@ type FormData = {
 
 export default function SubmissionForm() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormData>();
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm<FormData>();
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     console.log("Form Submitted Data:", JSON.stringify(data));
-    data.content = "content";
+    data.content = "content"; // Modify this according to your content
     try {
       const response = await fetch("http://localhost:3001/api/article/create", {
         method: "POST",
@@ -46,16 +43,43 @@ export default function SubmissionForm() {
     }
   };
 
-  // Handle file upload
+  // Handle BibTeX file upload
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file && file.type === "application/pdf") {
-      setErrorMessage(
-        "PDF files are not allowed. Please upload a BibTeX (.bib) file."
-      );
-      e.target.value = ""; // Reset the file input
-    } else {
-      setErrorMessage(null);
+    if (file) {
+      const fileName = file.name.toLowerCase();
+      console.log("Uploaded File Name:", fileName); // Log file name for troubleshooting
+      console.log("File Type:", file.type); // Log MIME type for troubleshooting
+
+      // Validate file extension instead of MIME type
+      if (fileName.endsWith(".bib")) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const content = reader.result as string;
+          console.log("BibTeX File Content:", content); // Log content for troubleshooting
+          try {
+            const parsedBibtex = bibtexParse.toJSON(content);
+            console.log("Parsed BibTeX:", parsedBibtex); // Log parsed BibTeX for troubleshooting
+            const entry = parsedBibtex[0]?.entryTags;
+            if (entry) {
+              setValue("title", entry.title || "");
+              setValue("authors", entry.author || "");
+              setValue("journal", entry.journal || "");
+              setValue("year", entry.year ? parseInt(entry.year) : 0);
+              setValue("sections", `${entry.volume || ""}, ${entry.number || ""}, ${entry.pages || ""}`);
+              setValue("url", entry.doi || entry.url || "");
+            }
+            setErrorMessage(null); // Clear error if file is valid
+          } catch (error) {
+            console.error("Parsing Error:", error);
+            setErrorMessage("Error parsing BibTeX file.");
+          }
+        };
+        reader.readAsText(file);
+      } else {
+        setErrorMessage("Please upload a valid BibTeX (.bib) file.");
+        e.target.value = ""; // Reset the file input
+      }
     }
   };
 
