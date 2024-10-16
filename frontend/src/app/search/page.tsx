@@ -1,7 +1,6 @@
 'use client'; // Required for stateful components in the new Next.js app directory
-
 import React, { useState } from 'react';
-import SearchBar from '../../components/SearchBar';
+import ClaimsDropdown from '../../components/ClaimsDropdown';
 import YearRangeFilter from '../../components/YearRangeFilter';
 import ResultsDisplay from '../../components/ResultsDisplay';
 
@@ -12,29 +11,43 @@ interface Result {
   year: number;
   url: string;
   bibtex: string;
-  method: string; // Add a `method` field to represent the SE method used
+  claim: string; // Add a `claim` field to represent the claim used
+}
+
+interface Claim {
+  _id: string;
+  name: string;
+  colour: string; // Ensure this property is required
+  parent: string;
+  is_parent: boolean;
+}
+
+interface ClaimItem extends Claim {
+  children: ClaimItem[] | null;
 }
 
 const SearchPage: React.FC = () => {
   // State for the search results and year range
   const [results, setResults] = useState<Result[]>([]);
   const [yearRange, setYearRange] = useState({ startYear: 2000, endYear: 2024 });
-  const [selectedMethod, setSelectedMethod] = useState("Agile"); // Default SE method
+  const [selectedClaim, setSelectedClaim] = useState<ClaimItem | null>(null);
 
-  // Function to handle SE method selection
-  const handleMethodSelect = (method: string) => {
-    setSelectedMethod(method);
-    handleSearch(method, yearRange.startYear, yearRange.endYear);
+  // Function to handle claim selection
+  const handleClaimSelect = (claim: ClaimItem) => {
+    setSelectedClaim(claim);
+    handleSearch(claim, yearRange.startYear, yearRange.endYear);
   };
 
   // Function to handle year range changes
   const handleYearRangeChange = (startYear: number, endYear: number) => {
     setYearRange({ startYear, endYear });
-    handleSearch(selectedMethod, startYear, endYear); // Reapply filter based on new year range
+    if (selectedClaim) {
+      handleSearch(selectedClaim, startYear, endYear); // Reapply filter based on new year range
+    }
   };
 
   // Mock search function for demonstration purposes
-  const handleSearch = (method: string, startYear: number, endYear: number): void => {
+  const handleSearch = (claim: ClaimItem, startYear: number, endYear: number): void => {
     // Mock data representing articles in the database
     const mockResults: Result[] = [
       {
@@ -44,7 +57,7 @@ const SearchPage: React.FC = () => {
         year: 2022,
         url: 'https://example.com/article1',
         bibtex: generateBibTex('Understanding Agile Development', ['John Doe'], 2022, 'Web Technologies'),
-        method: 'Agile',
+        claim: claim.name,
       },
       {
         title: 'Test-Driven Development Best Practices',
@@ -53,18 +66,17 @@ const SearchPage: React.FC = () => {
         year: 2020,
         url: 'https://example.com/article2',
         bibtex: generateBibTex('Test-Driven Development Best Practices', ['Jane Smith', 'Robert Brown'], 2020, 'Software Engineering'),
-        method: 'Test-Driven Development',
+        claim: claim.name,
       },
     ];
 
-    // Filter based on the selected SE method and the year range
+    // Filter based on the selected claim and the year range
     const filteredResults = mockResults.filter(
       (result) =>
-        result.method === method &&
+        result.claim === claim.name &&
         result.year >= startYear &&
         result.year <= endYear
     );
-
     setResults(filteredResults);
   };
 
@@ -82,11 +94,11 @@ const SearchPage: React.FC = () => {
   return (
     <div>
       <h1>Search Journals</h1>
-      {/* Use the dropdown-based SearchBar */}
-      <SearchBar onMethodSelect={handleMethodSelect} />
+      {/* Use the dropdown-based ClaimsDropdown */}
+      <ClaimsDropdown onClaimSelect={handleClaimSelect} />
       {/* Year range selection component */}
-      <YearRangeFilter minYear={2000} maxYear={2024} onYearRangeChange={handleYearRangeChange} />
-      {/* Display the search results */}
+      <YearRangeFilter onYearRangeChange={handleYearRangeChange} minYear={0} maxYear={0} />
+      {/* Results display component */}
       <ResultsDisplay results={results} />
     </div>
   );
