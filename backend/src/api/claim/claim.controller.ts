@@ -33,6 +33,7 @@ export class ClaimController {
         }
     }
 
+
     // To create an Claim. Expects an object fitting the definition of the CreateClaimDto object
     @Post('/create')
     async create(@Body() createClaimDto: CreateClaimDTO) {
