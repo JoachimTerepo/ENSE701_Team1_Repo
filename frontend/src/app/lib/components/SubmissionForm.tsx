@@ -154,6 +154,10 @@ export default function SubmissionForm() {
           <input
             {...register("url", {
               required: "DOI is required",
+              pattern: {
+                value: /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i, // Regular expression for URL validation
+                message: "Please enter a valid URL",
+              },
             })}
             placeholder="DOI"
           />
