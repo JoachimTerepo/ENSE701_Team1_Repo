@@ -12,11 +12,24 @@ interface ClaimItem extends Claim {
   children: ClaimItem[] | null;
 }
 
+interface Article {
+    _id: string;
+    title: string;
+    authors: string[];
+    journal: string;
+    year: number;
+    url: string;
+    bibtex: string;
+    claims: string[]; // Array of claim IDs
+  }
+  
+
 interface ClaimsDropdownProps {
   onClaimSelect: (claim: ClaimItem) => void;
+  onArticlesFetch: (articles: Article[]) => void;
 }
 
-const ClaimsDropdown: React.FC<ClaimsDropdownProps> = ({ onClaimSelect }) => {
+const ClaimsDropdown: React.FC<ClaimsDropdownProps> = ({ onClaimSelect, onArticlesFetch }) => {
   const [claims, setClaims] = useState<ClaimItem[]>([]);
   const [selectedClaim, setSelectedClaim] = useState<string>("");
   const [nonParentClaims, setNonParentClaims] = useState<ClaimItem[]>([]);
@@ -119,18 +132,45 @@ const ClaimsDropdown: React.FC<ClaimsDropdownProps> = ({ onClaimSelect }) => {
     }
   };
 
+  const fetchArticles = async (claimId: string) => {
+    try {
+      console.log(`Fetching articles for claim ${claimId}...`); 
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/article?claimId=${claimId}`);
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+      const data = await res.json();
+      // Ensure that each article has a 'claims' array
+      const articlesWithClaims = data.map((article: any) => ({
+        ...article,
+        claims: article.claims || []  // Default to empty array if claims field is missing
+      }));
+      console.log(`Fetched articles for claim ${claimId}:`, articlesWithClaims);
+      onArticlesFetch(articlesWithClaims);
+    } catch (e) {
+      console.error(`Error fetching articles for claim ${claimId}:`, e);
+    }
+  };  
+
   useEffect(() => {
     fetchParents();
   }, []);
 
   const handleClaimChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
     const claimId = event.target.value;
+    console.log(`Claim changed to ${claimId}`);
     setSelectedClaim(claimId);
-    const selectedClaimItem = findClaimById(claims, claimId);
+    
+    const selectedClaimItem = nonParentClaims.find((claim) => claim._id === claimId);
     if (selectedClaimItem) {
+      console.log(`Selected claim item:`, selectedClaimItem);
       onClaimSelect(selectedClaimItem);
+      await fetchArticles(claimId);
+    } else {
+      console.log(`Claim item not found for ID: ${claimId}`);
     }
   };
+  
 
   const findClaimById = (claims: ClaimItem[], id: string): ClaimItem | null => {
     for (const claim of claims) {

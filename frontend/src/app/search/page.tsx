@@ -1,23 +1,12 @@
 'use client'; // Required for stateful components in the new Next.js app directory
 import React, { useState } from 'react';
-import ClaimsDropdown from '../../components/ClaimsDropdown';
-import YearRangeFilter from '../../components/YearRangeFilter';
-import ResultsDisplay from '../../components/ResultsDisplay';
-
-interface Result {
-  title: string;
-  authors: string[];
-  journal: string;
-  year: number;
-  url: string;
-  bibtex: string;
-  claim: string; // Add a `claim` field to represent the claim used
-}
+import ClaimsDropdown from '../../components/ClaimsDropdown'; // Import the dropdown component
+import YearRangeFilter from '../../components/YearRangeFilter'; // Assuming you have this component
 
 interface Claim {
   _id: string;
   name: string;
-  colour: string; // Ensure this property is required
+  colour: string;
   parent: string;
   is_parent: boolean;
 }
@@ -26,80 +15,73 @@ interface ClaimItem extends Claim {
   children: ClaimItem[] | null;
 }
 
-const SearchPage: React.FC = () => {
-  // State for the search results and year range
-  const [results, setResults] = useState<Result[]>([]);
-  const [yearRange, setYearRange] = useState({ startYear: 2000, endYear: 2024 });
-  const [selectedClaim, setSelectedClaim] = useState<ClaimItem | null>(null);
+interface Article {
+  _id: string;
+  title: string;
+  authors: string[];
+  journal: string;
+  year: number;
+  url: string;
+  bibtex: string;
+  claims: string[]; // Array of claim IDs (ObjectId as string)
+}
 
-  // Function to handle claim selection
+const SearchPage: React.FC = () => {
+  const [selectedClaim, setSelectedClaim] = useState<ClaimItem | null>(null);
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [yearRange, setYearRange] = useState<{ startYear: number; endYear: number }>({ startYear: 0, endYear: new Date().getFullYear() });
+
   const handleClaimSelect = (claim: ClaimItem) => {
     setSelectedClaim(claim);
-    handleSearch(claim, yearRange.startYear, yearRange.endYear);
+    handleSearch(claim._id, yearRange.startYear, yearRange.endYear); // Perform search after claim selection
   };
 
-  // Function to handle year range changes
+  const handleArticlesFetch = (fetchedArticles: Article[]) => {
+    setArticles(fetchedArticles); // Store fetched articles from ClaimsDropdown
+  };
+
   const handleYearRangeChange = (startYear: number, endYear: number) => {
     setYearRange({ startYear, endYear });
     if (selectedClaim) {
-      handleSearch(selectedClaim, startYear, endYear); // Reapply filter based on new year range
+      handleSearch(selectedClaim._id, startYear, endYear); // Reapply filter based on new year range
     }
   };
 
-  // Mock search function for demonstration purposes
-  const handleSearch = (claim: ClaimItem, startYear: number, endYear: number): void => {
-    // Mock data representing articles in the database
-    const mockResults: Result[] = [
-      {
-        title: 'Understanding Agile Development',
-        authors: ['John Doe'],
-        journal: 'Web Technologies',
-        year: 2022,
-        url: 'https://example.com/article1',
-        bibtex: generateBibTex('Understanding Agile Development', ['John Doe'], 2022, 'Web Technologies'),
-        claim: claim.name,
-      },
-      {
-        title: 'Test-Driven Development Best Practices',
-        authors: ['Jane Smith', 'Robert Brown'],
-        journal: 'Software Engineering',
-        year: 2020,
-        url: 'https://example.com/article2',
-        bibtex: generateBibTex('Test-Driven Development Best Practices', ['Jane Smith', 'Robert Brown'], 2020, 'Software Engineering'),
-        claim: claim.name,
-      },
-    ];
-
-    // Filter based on the selected claim and the year range
-    const filteredResults = mockResults.filter(
-      (result) =>
-        result.claim === claim.name &&
-        result.year >= startYear &&
-        result.year <= endYear
+  // Filtering the articles based on the selected year range and claim ID
+  const handleSearch = (claimId: string, startYear: number, endYear: number) => {
+    const filteredArticles = articles.filter(article =>
+      article.claims.includes(claimId) && // Check if claimId is in the claims array
+      article.year >= startYear &&
+      article.year <= endYear
     );
-    setResults(filteredResults);
-  };
-
-  // Function to generate BibTex format for demonstration purposes
-  const generateBibTex = (title: string, authors: string[], year: number, journal: string): string => {
-    const authorString = authors.join(' and ');
-    return `@article{${authors[0].toLowerCase()}${year}${title.replace(/\s+/g, '')},
-      title={${title}},
-      author={${authorString}},
-      journal={${journal}},
-      year={${year}}
-    }`;
+    setArticles(filteredArticles);
   };
 
   return (
     <div>
-      <h1>Search Journals</h1>
-      {/* Use the dropdown-based ClaimsDropdown */}
-      <ClaimsDropdown onClaimSelect={handleClaimSelect} />
-      {/* Year range selection component */}
-      <YearRangeFilter onYearRangeChange={handleYearRangeChange} minYear={0} maxYear={0} />
-      {/* Results display component */}
-      <ResultsDisplay results={results} />
+      <h1>Search Articles by Claim ID</h1>
+      <ClaimsDropdown onClaimSelect={handleClaimSelect} onArticlesFetch={handleArticlesFetch} />
+      <YearRangeFilter onYearRangeChange={handleYearRangeChange} minYear={0} maxYear={new Date().getFullYear()} />
+      
+      {articles.length > 0 ? (
+        <div>
+          <h2>Articles Found:</h2>
+          <ul>
+            {articles.map(article => (
+              <li key={article._id}>
+                <h3>{article.title}</h3>
+                <p><strong>Authors:</strong> {article.authors.join(', ')}</p>
+                <p><strong>Journal:</strong> {article.journal}</p>
+                <p><strong>Year:</strong> {article.year}</p>
+                <p><strong>URL:</strong> <a href={article.url} target="_blank" rel="noopener noreferrer">{article.url}</a></p>
+                <pre>{article.bibtex}</pre>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        <p>No articles found</p>
+      )}
     </div>
   );
 };
