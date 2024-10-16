@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import { Article } from "@/app/lib/types/article";
+import React, { useState, useEffect } from "react";
 
 interface Claim {
   _id: string;
@@ -12,24 +13,15 @@ interface ClaimItem extends Claim {
   children: ClaimItem[] | null;
 }
 
-interface Article {
-    _id: string;
-    title: string;
-    authors: string[];
-    journal: string;
-    year: number;
-    url: string;
-    bibtex: string;
-    claims: string[]; // Array of claim IDs
-  }
-  
-
 interface ClaimsDropdownProps {
   onClaimSelect: (claim: ClaimItem) => void;
   onArticlesFetch: (articles: Article[]) => void;
 }
 
-const ClaimsDropdown: React.FC<ClaimsDropdownProps> = ({ onClaimSelect, onArticlesFetch }) => {
+const ClaimsDropdown: React.FC<ClaimsDropdownProps> = ({
+  onClaimSelect,
+  onArticlesFetch,
+}) => {
   const [claims, setClaims] = useState<ClaimItem[]>([]);
   const [selectedClaim, setSelectedClaim] = useState<string>("");
   const [nonParentClaims, setNonParentClaims] = useState<ClaimItem[]>([]);
@@ -134,34 +126,48 @@ const ClaimsDropdown: React.FC<ClaimsDropdownProps> = ({ onClaimSelect, onArticl
 
   const fetchArticles = async (claimId: string) => {
     try {
-      console.log(`Fetching articles for claim ${claimId}...`); 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/article?claimId=${claimId}`);
+      console.log(`Fetching articles for claim ${claimId}...`);
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/article?claimId=${claimId}`
+      );
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
       }
+
       const data = await res.json();
+
+      // Handle when the response fails or does not contain any articles
+      if (data === undefined || data === null || data.message !== null) {
+        onArticlesFetch([]);
+        return;
+      }
+
       // Ensure that each article has a 'claims' array
       const articlesWithClaims = data.map((article: any) => ({
         ...article,
-        claims: article.claims || []  // Default to empty array if claims field is missing
+        claims: article.claims || [], // Default to empty array if claims field is missing
       }));
       console.log(`Fetched articles for claim ${claimId}:`, articlesWithClaims);
       onArticlesFetch(articlesWithClaims);
     } catch (e) {
       console.error(`Error fetching articles for claim ${claimId}:`, e);
     }
-  };  
+  };
 
   useEffect(() => {
     fetchParents();
   }, []);
 
-  const handleClaimChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleClaimChange = async (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     const claimId = event.target.value;
     console.log(`Claim changed to ${claimId}`);
     setSelectedClaim(claimId);
-    
-    const selectedClaimItem = nonParentClaims.find((claim) => claim._id === claimId);
+
+    const selectedClaimItem = nonParentClaims.find(
+      (claim) => claim._id === claimId
+    );
     if (selectedClaimItem) {
       console.log(`Selected claim item:`, selectedClaimItem);
       onClaimSelect(selectedClaimItem);
@@ -170,7 +176,6 @@ const ClaimsDropdown: React.FC<ClaimsDropdownProps> = ({ onClaimSelect, onArticl
       console.log(`Claim item not found for ID: ${claimId}`);
     }
   };
-  
 
   const findClaimById = (claims: ClaimItem[], id: string): ClaimItem | null => {
     for (const claim of claims) {
@@ -194,7 +199,9 @@ const ClaimsDropdown: React.FC<ClaimsDropdownProps> = ({ onClaimSelect, onArticl
         value={selectedClaim}
         onChange={handleClaimChange}
       >
-        <option value="" disabled>Select a claim</option>
+        <option value="" disabled>
+          Select a claim
+        </option>
         {nonParentClaims.map((claim) => (
           <option key={claim._id} value={claim._id}>
             {claim.name}
