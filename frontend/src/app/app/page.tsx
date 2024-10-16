@@ -29,7 +29,7 @@ export default function Home() {
     // The new rating sum
     let ratingSum = article.rating_sum + rating;
     // Increment the total ratings
-    let totalRatings = article.total_ratings + 1;
+    let totalRatings = (article.total_ratings ?? 0) + 1;
     // Calculate the new rating
     const newRating = ratingSum / totalRatings;
     try {
@@ -96,7 +96,7 @@ export default function Home() {
                   </a>
                 </td>
                 <td>
-                  {Number(a.rating.toFixed(1))}⭐ ({a.total_ratings} rating
+                  {Number((a.rating ?? 0).toFixed(1))}⭐ ({a.total_ratings} rating
                   {a.total_ratings !== 1 ? "s" : ""}){" "}
                   <div className="relative inline-block">
                     <button
