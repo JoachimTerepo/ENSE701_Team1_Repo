@@ -5,6 +5,6 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors();
-  await app.listen(process.env.PORT || 3000);
+  await app.init();  // Initialize the app, but don't bind to a port
 }
-bootstrap();
+export const app = bootstrap();  // Export the initialized app
