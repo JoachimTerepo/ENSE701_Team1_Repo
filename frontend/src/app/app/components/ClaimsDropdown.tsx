@@ -137,7 +137,7 @@ const ClaimsDropdown: React.FC<ClaimsDropdownProps> = ({
       const data = await res.json();
 
       // Handle when the response fails or does not contain any articles
-      if (data === undefined || data === null || data.message !== null) {
+      if (data === undefined || data === null || data.message !== undefined) {
         onArticlesFetch([]);
         return;
       }
