@@ -65,4 +65,14 @@ export class ClaimController {
             return { error: "Something went wrong\n" + e }
         }
     }
+
+    @Post("/list")
+    async fromList(@Body() claimDTO: ClaimDTO[]) {
+        try {
+            const data = await this.ClaimService.findList(claimDTO)
+            return data
+        } catch (e) {
+            return { error: "Something went wrong\n" + e }
+        }
+    }
 }

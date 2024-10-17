@@ -10,6 +10,7 @@ export default function Analysis({
   params: { id: string | null };
 }) {
   const [article, setArticle] = useState<Article | null>(null);
+  const [claims, setClaims] = useState<Claim[] | null>(null);
   const [searchValue, setSearchValue] = useState<string>("");
   const [searchTimer, setSearchTimer] = useState<NodeJS.Timeout | null>(null);
   const [searchResult, setSearchResult] = useState<Claim[] | null>(null);
@@ -43,7 +44,29 @@ export default function Analysis({
         console.error("More than 1 article returned. Defaulting to index 0");
       }
 
+      if (data[0].approved_at !== undefined && data[0].approved_at !== null) {
+        data[0].approved_at = new Date(data[0].approved_at);
+      }
+
       setArticle(data[0]);
+
+      const claimsRes = await fetch(
+        process.env.NEXT_PUBLIC_API_URL + "/api/claim/list",
+        {
+          method: "POST",
+          body: JSON.stringify(data[0].claims),
+          headers: [["Content-Type", "application/json"]],
+        }
+      );
+
+      const claims = (await claimsRes.json()) as Claim[] | null;
+
+      if (data === null) {
+        console.error("No claims returned");
+        return;
+      }
+
+      setClaims(claims);
     } catch (e) {
       // TODO: There is a better way we can handle this
       console.error(e);
@@ -123,6 +146,7 @@ export default function Analysis({
       }
 
       setSearchValue("");
+      setSearchResult([]);
       await fetchArticles();
     } catch (e) {
       // TODO: There is a better way we can handle this
@@ -178,7 +202,13 @@ export default function Analysis({
               </p>
               <p>{article.year}</p>
               <p>
-                Moderator approved at: {article.approved_at?.toLocaleString()}
+                Moderator approved on:{" "}
+                {article.approved_at === undefined ||
+                article.approved_at === null ? (
+                  <></>
+                ) : (
+                  article.approved_at.toLocaleDateString()
+                )}
               </p>
             </div>
             <div className="w-1/2 text-end block space-y-2">
@@ -231,7 +261,19 @@ export default function Analysis({
                   <></>
                 )}
               </div>
-              <div className="w-1/2"></div>
+              <div className="w-1/2 border-l border-neutral-300">
+                {claims === null || claims.length === 0 ? (
+                  <div>No claims for this article</div>
+                ) : (
+                  claims.map((c) => {
+                    return (
+                      <div className="even:bg-slate-100 pl-4" key={c._id}>
+                        {c.name}
+                      </div>
+                    );
+                  })
+                )}
+              </div>
             </div>
           </div>
         </div>
