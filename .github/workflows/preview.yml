@@ -1,13 +1,21 @@
-name: GitHub Actions Vercel Preview
+name: CI/CD Pipeline
 
-env:
-  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 on:
   workflow_dispatch:
+
 jobs:
-  Test:
-    uses: jcchenaut/my-next-app/.github/workflows/test.yml@develop
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - name: Install dependencies
+        run: npm install
+      - name: Run tests
+        run: npm test
 
   Deploy-Preview:
     runs-on: ubuntu-latest

@@ -11,7 +11,7 @@ on:
 jobs:
   Test:
     if: github.event.pull_request.merged == true
-    uses: jcchenaut/my-next-app/.github/workflows/test.yml@develop
+    uses: JoachimTerepo/ENSE701_TEAM1_REPO/.github/workflows/test.yml@develop
 
   Deploy-Production:
     if: github.event.pull_request.merged == true
