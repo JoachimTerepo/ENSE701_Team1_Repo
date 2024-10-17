@@ -7,8 +7,6 @@ export type UserDocument = HydratedDocument<User>
 // The schema for MongoDB to use
 @Schema({ timestamps: true })
 export class User {
-    @Prop({ type: { type: Types.ObjectId } })
-    _id: string
     @Prop({ required: true, })
     email: string
     @Prop({ required: true })

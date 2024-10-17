@@ -45,7 +45,7 @@ export class UserService {
                 response.statusCode = 400
                 return { error: "Email or password was incorrect" }
             }
-            return { data: user._id }
+            return { data: user.email }
         } catch (e) {
             response.statusCode = 500
             return { error: "Server error: " + e }

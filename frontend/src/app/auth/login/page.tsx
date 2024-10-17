@@ -42,7 +42,7 @@ export default function Login() {
           </div>
         </form>
         <Link
-          href={"/register"}
+          href={"/auth/register"}
           className="text-blue-400 underline text-center w-full flex justify-center mt-2"
         >
           <span>No account? Register</span>
