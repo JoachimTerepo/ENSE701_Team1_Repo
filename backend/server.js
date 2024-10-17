@@ -1,26 +1,12 @@
 // backend/server.js
 
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
+const { NestFactory } = require('@nestjs/core');
+const { AppModule } = require('./src/app.module');
 
-const app = express();
-app.use(cors());
-app.use(express.json());
+async function createApp() {
+  const app = await NestFactory.create(AppModule);
+  app.enableCors();
+  return app.init();  // Don't bind to any port
+}
 
-// MongoDB connection
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log('MongoDB connected'))
-.catch((err) => console.log('MongoDB connection error:', err));
-
-// Simple route example
-app.get('/api/data', async (req, res) => {
-  // Example MongoDB operation
-  res.json({ message: 'Hello from MongoDB Backend!' });
-});
-
-const port = process.env.PORT || 3001;
-app.listen(port, () => console.log(`Server running on port ${port}`));
+module.exports = createApp;
