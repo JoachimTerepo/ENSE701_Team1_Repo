@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ROLES, User } from './user.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { CreateUserDto } from './create-user-dto';
 import { Response } from 'express';
 import * as bcrypt from 'bcrypt'
@@ -21,7 +21,8 @@ export class UserService {
     }
 
     async findOne(id: string): Promise<User> {
-        return await this.UserModel.findById(id, { password: 0 }).exec();
+        const objId = new Types.ObjectId(id)
+        return await this.UserModel.findById(objId, { password: 0 }).exec();
     }
 
     async findByEmail(email: string): Promise<User> {
@@ -45,7 +46,7 @@ export class UserService {
                 response.statusCode = 400
                 return { error: "Email or password was incorrect" }
             }
-            return { data: user.email }
+            return { data: user._id }
         } catch (e) {
             response.statusCode = 500
             return { error: "Server error: " + e }

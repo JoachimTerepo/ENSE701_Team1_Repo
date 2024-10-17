@@ -1,6 +1,6 @@
 "use client";
 
-import Blocker from "@/app/lib/components/Blocker";
+import Blocker from "@/lib/components/Blocker";
 import { useEffect, useState } from "react";
 
 type ClaimItem = Claim & {

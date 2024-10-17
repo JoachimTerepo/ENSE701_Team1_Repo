@@ -1,7 +1,7 @@
 "use client";
 
-import Blocker from "@/app/lib/components/Blocker";
-import { Article } from "@/app/lib/types/article";
+import Blocker from "@/lib/components/Blocker";
+import { Article } from "@/lib/types/article";
 import { useEffect, useState } from "react";
 
 export default function Analysis({

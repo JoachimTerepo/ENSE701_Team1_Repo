@@ -1,4 +1,4 @@
-import { Article } from "@/app/lib/types/article";
+import { Article } from "@/lib/types/article";
 import React, { useState, useEffect } from "react";
 
 interface Claim {

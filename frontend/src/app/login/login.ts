@@ -60,7 +60,7 @@ export async function login(state: FormState, formData: FormData) {
     }
   }
 
-  redirect("/app")
+  redirect("/admin")
 }
 
 const LoginSchema = z.object({

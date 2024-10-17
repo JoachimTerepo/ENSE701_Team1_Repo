@@ -1,8 +1,8 @@
 "use client"; // Required for stateful components in the new Next.js app directory
 import React, { useState } from "react";
-import ClaimsDropdown from "../components/ClaimsDropdown"; // Import the dropdown component
-import YearRangeFilter from "../components/YearRangeFilter"; // Assuming you have this component
-import { Article } from "@/app/lib/types/article";
+import ClaimsDropdown from "@/lib/components/ClaimsDropdown"; // Import the dropdown component
+import YearRangeFilter from "@/lib/components/YearRangeFilter"; // Assuming you have this component
+import { Article } from "@/lib/types/article";
 
 interface Claim {
   _id: string;

@@ -13,3 +13,12 @@ export class CreateUserDto {
     lastName: string;
     role: ROLES;
 }
+
+export class UserDTO {
+    created_at?: Date;
+    updated_at?: Date;
+    email?: string;
+    firstName?: string;
+    lastName?: string;
+    role?: ROLES;
+}
