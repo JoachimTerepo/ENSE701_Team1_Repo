@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import bibtexParse from "bibtex-parse-js"; // Import BibTeX parser
-import "@/app/styles/SubmissionForm.css";
 
 type FormData = {
   title: string;
@@ -17,7 +16,12 @@ type FormData = {
 
 export default function SubmissionForm() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const { register, handleSubmit, setValue, formState: { errors } } = useForm<FormData>();
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<FormData>();
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     console.log("Form Submitted Data:", JSON.stringify(data));
@@ -66,7 +70,12 @@ export default function SubmissionForm() {
               setValue("authors", entry.author || "");
               setValue("journal", entry.journal || "");
               setValue("year", entry.year ? parseInt(entry.year) : 0);
-              setValue("sections", `${entry.volume || ""}, ${entry.number || ""}, ${entry.pages || ""}`);
+              setValue(
+                "sections",
+                `${entry.volume || ""}, ${entry.number || ""}, ${
+                  entry.pages || ""
+                }`
+              );
               setValue("url", entry.doi || entry.url || "");
             }
             setErrorMessage(null); // Clear error if file is valid
