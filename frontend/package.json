@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "bibtex-parse-js": "^0.0.23",
-    "next": "^14.2.13",
+    "next": "^14.2.15",
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.53.0",
