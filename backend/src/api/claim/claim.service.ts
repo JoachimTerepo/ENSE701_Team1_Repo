@@ -26,6 +26,10 @@ export class ClaimService {
         return await this.ClaimModel.find().exec();
     }
 
+    async findList(claims: ClaimDTO[]): Promise<Claim[]> {
+        return await this.ClaimModel.find({ _id: { $in: claims } }).exec();
+    }
+
     async findOne(id: string): Promise<Claim> {
         return await this.ClaimModel.findById(id).exec();
     }
