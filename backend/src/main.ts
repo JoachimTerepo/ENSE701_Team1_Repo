@@ -1,11 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.enableCors();  // Enable CORS if needed
-  await app.init();  // Initialize the app, but don't call `listen()`
+  app.enableCors({
+    origin: 'https://ense-701-team1-repo-git-backendchanges-joachimterepos-projects.vercel.app', // Frontend URL
+    credentials: true, // If you need to allow credentials (cookies, auth headers)
+  });
+  await app.listen(process.env.PORT || 3000);
 }
-
-// Export the initialized app for Vercel
-export const app = bootstrap();
+bootstrap();
