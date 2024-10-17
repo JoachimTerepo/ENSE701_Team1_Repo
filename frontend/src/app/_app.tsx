@@ -1,5 +1,4 @@
 // src/app/_app.tsx
-import "globals.css";
 import { AppProps } from "next/app";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
