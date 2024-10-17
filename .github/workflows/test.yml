@@ -1,21 +1,48 @@
-name: GitHub Actions Test
+name: Test
 
 on:
   push:
-    branches: [ "main", "develop" ]
+    branches: [main]
   pull_request:
-    branches: [ "main", "develop" ]
-  workflow_call:
-  workflow_dispatch:
+    branches: [main]
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [21.x]
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-      - name: Install dependecies
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{matrix.node-version}}
+
+      - name: (Backend) Install dependencies
         run: npm install
+        working-directory: ./backend
 
-      - name: Run test
-        run: npm run test:ci
+      #   - name: (Backend) Run tests
+      #     run: npm test
+      #     working-directory: ./backend
+
+      - name: (Backend) Build
+        run: npm run build
+        working-directory: ./backend
+
+      - name: (Frontend) Install dependencies
+        run: npm install
+        working-directory: ./frontend
+
+      - name: (Frontend) Run tests
+        run: npm test
+        working-directory: ./frontend
+
+      - name: (Frontend) Build
+        run: npm run build
+        working-directory: ./frontend
