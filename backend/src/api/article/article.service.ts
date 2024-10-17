@@ -34,4 +34,16 @@ export class ArticleService {
         const deletedUser = await this.ArticleModel.findByIdAndDelete(id).exec();
         return deletedUser;
     }
+
+    async findByClaimId(claimId: string): Promise<Article[]> {
+        try {
+          // Convert claimId to ObjectId since claims are stored as ObjectId
+          const objectId = new Types.ObjectId(claimId);
+          // Use $in to check if claimId exists in the claims array
+          return await this.ArticleModel.find({ claims: { $in: [objectId] } }).exec();
+        } catch (error) {
+          console.error('Error in findByClaimId:', error);
+          return [];
+        }
+      }
 }

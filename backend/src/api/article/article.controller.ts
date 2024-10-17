@@ -9,6 +9,20 @@ import { ArticleService } from './article.service';
 export class ArticleController {
   constructor(private readonly articleService: ArticleService) { }
 
+  // GET method to fetch articles by claimId
+  @Get()
+  async findByClaimId(@Query('claimId') claimId: string) {
+    try {
+      const articles = await this.articleService.findByClaimId(claimId);
+      if (!articles || articles.length === 0) {
+        return { message: `No articles found for claimId: ${claimId}` };
+      }
+      return articles;
+    } catch (e) {
+      return { error: 'Something went wrong\n' + e };
+    }
+  }
+
   @Post()
   async findAll(@Body() filter: ArticleFilter) {
     try {

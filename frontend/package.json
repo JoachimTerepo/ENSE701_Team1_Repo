@@ -10,6 +10,7 @@
     "test": "jest --passWithNoTests"
   },
   "dependencies": {
+    "bibtex-parse-js": "^0.0.23",
     "next": "^14.2.15",
     "react": "^18",
     "react-dom": "^18",
