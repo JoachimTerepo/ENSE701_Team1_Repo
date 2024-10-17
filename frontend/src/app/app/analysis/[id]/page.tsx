@@ -130,6 +130,34 @@ export default function Analysis({
     }
   };
 
+  const handleComplete = async () => {
+    try {
+      const res = await fetch(
+        process.env.NEXT_PUBLIC_API_URL + "/api/article/update",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            id: article?._id,
+            is_analysed: true,
+            analysed_at: Date.now(),
+          }),
+          headers: [["Content-Type", "application/json"]],
+        }
+      );
+
+      const data = (await res.json()) as { error: string | null };
+
+      if (data.error !== null) {
+        throw new Error(data.error);
+      }
+
+      await fetchArticles();
+    } catch (e) {
+      // TODO: There is a better way we can handle this
+      console.error(e);
+    }
+  };
+
   useEffect(() => {
     fetchArticles();
   }, []);
@@ -155,7 +183,10 @@ export default function Analysis({
             </div>
             <div className="w-1/2 text-end block space-y-2">
               {!article.analysed_at ? (
-                <button className="text-white px-4 py-2 bg-green-600 rounded shadow">
+                <button
+                  className="text-white px-4 py-2 bg-green-600 rounded shadow"
+                  onClick={handleComplete}
+                >
                   Mark as completed
                 </button>
               ) : (
@@ -167,7 +198,7 @@ export default function Analysis({
                 </button>
               )}
               <div className="text-blue-500 underline">
-                <a href={"http://" + article.url} target="_blank">
+                <a href={article.url} target="_blank">
                   View article site
                 </a>
               </div>
@@ -200,13 +231,7 @@ export default function Analysis({
                   <></>
                 )}
               </div>
-              <div className="w-1/2">
-                <ul className="list-none">
-                  {searchResult?.map((r) => {
-                    return <li>{r.name}</li>;
-                  })}
-                </ul>
-              </div>
+              <div className="w-1/2"></div>
             </div>
           </div>
         </div>

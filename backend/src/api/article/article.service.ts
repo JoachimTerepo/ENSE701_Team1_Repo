@@ -22,7 +22,7 @@ export class ArticleService {
         return await this.ArticleModel.create(createArticleDto);
     }
 
-    async update(id: string, articleDto: ArticleDTO) {
+    async update(id: string, articleDto: ArticleUpdateDTO) {
         if (articleDto.claims !== undefined) {
             let data = { ...articleDto, claims: articleDto.claims.map(c => new Types.ObjectId(c)) }
             return await this.ArticleModel.findByIdAndUpdate(id, { $set: { claims: data.claims } }).exec();
@@ -37,13 +37,13 @@ export class ArticleService {
 
     async findByClaimId(claimId: string): Promise<Article[]> {
         try {
-          // Convert claimId to ObjectId since claims are stored as ObjectId
-          const objectId = new Types.ObjectId(claimId);
-          // Use $in to check if claimId exists in the claims array
-          return await this.ArticleModel.find({ claims: { $in: [objectId] } }).exec();
+            // Convert claimId to ObjectId since claims are stored as ObjectId
+            const objectId = new Types.ObjectId(claimId);
+            // Use $in to check if claimId exists in the claims array
+            return await this.ArticleModel.find({ claims: { $in: [objectId] } }).exec();
         } catch (error) {
-          console.error('Error in findByClaimId:', error);
-          return [];
+            console.error('Error in findByClaimId:', error);
+            return [];
         }
-      }
+    }
 }

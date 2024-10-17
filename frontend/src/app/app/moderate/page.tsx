@@ -14,6 +14,8 @@ export default function Moderate() {
           method: "POST",
           body: JSON.stringify({
             is_approved: null,
+            quality_check_pass: null,
+            quality_checked_at: null,
           }),
           headers: [["Content-Type", "application/json"]],
         }
@@ -27,18 +29,14 @@ export default function Moderate() {
 
   const buttonPress = async (value: boolean, article: Article) => {
     try {
-      console.log(
-        JSON.stringify({
-          id: article._id,
-          is_approved: value,
-        })
-      );
       const res = await fetch(
         process.env.NEXT_PUBLIC_API_URL + "/api/article/update",
         {
           method: "POST",
           body: JSON.stringify({
             id: article._id,
+            quality_check_pass: true,
+            quality_checked_at: Date.now(),
             is_approved: value,
           }),
           headers: [["Content-Type", "application/json"]],
@@ -93,7 +91,7 @@ const ArticleTable = ({
               <td>{a.authors}</td>
               <td>{a.year}</td>
               <td>
-                <a href={"http://" + a.url} target="_blank">
+                <a href={a.url} target="_blank">
                   {a.url}
                 </a>
               </td>

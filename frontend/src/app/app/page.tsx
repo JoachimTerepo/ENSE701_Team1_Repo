@@ -14,7 +14,9 @@ export default function Home() {
         {
           method: "POST",
           body: JSON.stringify({
+            quality_check_pass: true,
             is_approved: true,
+            is_analysed: true,
           }),
           headers: [["Content-Type", "application/json"]],
         }
@@ -91,12 +93,13 @@ export default function Home() {
                 <td>{a.authors}</td>
                 <td>{a.year}</td>
                 <td>
-                  <a href={"http://" + a.url} target="_blank">
+                  <a href={a.url} target="_blank">
                     {a.url}
                   </a>
                 </td>
                 <td>
-                  {Number((a.rating ?? 0).toFixed(1))}⭐ ({a.total_ratings} rating
+                  {Number((a.rating ?? 0).toFixed(1))}⭐ ({a.total_ratings}{" "}
+                  rating
                   {a.total_ratings !== 1 ? "s" : ""}){" "}
                   <div className="relative inline-block">
                     <button

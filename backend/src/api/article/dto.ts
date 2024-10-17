@@ -1,25 +1,27 @@
 import { User } from '../user/user.schema';
 
 export class ArticleDTO {
-    id: string
-    title: string
-    authors: string[]
-    journal: string
-    year: number
-    url: string
-    isbn?: string
-    sections: string
-    content: string
-    is_approved?: boolean
-    approved_at?: Date
-    approved_by?: User
-    total_ratings?: number
-    rating?: number
-    quality_check_pass?: boolean
-    quality_checked_at?: Date
-    quality_checked_by?: User
-    moderation_comments?: string
-    claims: string[]
+  id: string
+  title: string
+  authors: string[]
+  journal: string
+  year: number
+  url: string
+  isbn?: string
+  sections: string
+  content: string
+  is_approved?: boolean
+  approved_at?: Date
+  approved_by?: User
+  total_ratings?: number
+  rating?: number
+  quality_check_pass?: boolean
+  quality_checked_at?: Date
+  quality_checked_by?: User
+  is_analysed: boolean;
+  analysed_at?: Date;
+  moderation_comments?: string
+  claims: string[]
 }
 
 export class ArticleUpdateDTO {
@@ -40,7 +42,10 @@ export class ArticleUpdateDTO {
   quality_check_pass?: boolean;
   quality_checked_at?: Date;
   quality_checked_by?: User;
+  is_analysed?: boolean;
+  analysed_at?: Date;
   moderation_comments?: string;
+  claims?: string[]
 }
 
 export class ArticleFilter {
@@ -53,4 +58,6 @@ export class ArticleFilter {
   rating?: number;
   quality_check_pass?: boolean;
   quality_checked_at?: Date;
+  is_analysed?: boolean;
+  analysed_at?: Date;
 }
