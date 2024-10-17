@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { ArticleDTO, ArticleFilter, ArticleUpdateDTO } from './dto';
 import { ArticleService } from './article.service';
 
@@ -44,6 +44,17 @@ export class ArticleController {
       return { error: "Something went wrong\n" + e }
     }
 
+  }
+
+  // New GET endpoint to retrieve all articles
+  @Get()
+  async getAll(@Query() filter: ArticleFilter) {
+    try {
+      const data = await this.articleService.findAll(filter);
+      return data;
+    } catch (e) {
+      return { error: 'Something went wrong\n' + e };
+    }
   }
 }
 
