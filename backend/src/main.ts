@@ -1,10 +1,19 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
-
+// run backend command "npm run start"
+// run frontend command "npm run dev"
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.enableCors();
-  await app.listen(process.env.PORT || 3000);
+
+  // Enable CORS
+  app.enableCors({ 
+    origin: true, 
+    credentials: true 
+  });
+
+  const port = process.env.PORT || 8082;
+  await app.listen(port, () => console.log(`Server running on port ${port}`));
 }
+
 bootstrap();
