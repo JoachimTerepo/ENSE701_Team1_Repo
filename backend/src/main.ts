@@ -1,15 +1,12 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ExpressAdapter } from '@nestjs/platform-express';
-import * as express from 'express';
+import express from 'express'; // default import
 
-// run backend command "npm run start"
-// run frontend command "npm run dev"
 async function bootstrap() {
   const server = express();
   const app = await NestFactory.create(AppModule, new ExpressAdapter(server));
 
-  // Enable CORS
   app.enableCors({ 
     origin: true, 
     credentials: true 
