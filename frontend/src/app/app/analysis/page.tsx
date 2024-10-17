@@ -92,6 +92,7 @@ export default function Analysis() {
                     <td className="flex justify-end items-center space-x-6 py-2 pr-2">
                       <a
                         href={"/app/analysis/" + a._id}
+                        target="_blank"
                         className="text-blue-500"
                       >
                         View
