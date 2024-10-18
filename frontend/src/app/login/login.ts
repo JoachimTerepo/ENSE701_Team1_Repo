@@ -22,7 +22,7 @@ export async function login(state: FormState, formData: FormData) {
   const password = formData.get("password");
 
   try {
-    const res = await fetch("http://localhost:3001/api/user/auth", {
+    const res = await fetch(process.env.NEXT_PUBLIC_API_URL + "/api/user/auth", {
       method: "POST",
       body: JSON.stringify({ email, password }),
       headers: {
