@@ -27,13 +27,16 @@ export default function SubmissionForm() {
     console.log("Form Submitted Data:", JSON.stringify(data));
     data.content = "content"; // Modify this according to your content
     try {
-      const response = await fetch("http://localhost:3001/api/article/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        process.env.NEXT_PUBLIC_API_URL + "/api/article/create",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
 
       const responseData = await response.json();
       if (responseData.error !== null) {
